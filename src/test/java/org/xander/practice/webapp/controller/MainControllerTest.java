@@ -25,7 +25,7 @@ public class MainControllerTest {
         mockMvc.perform(get("/main"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("<p>Hello, World!</p>")));
+                .andExpect(content().string(containsString("<div>Hello, World!</div>")));
     }
 
     @Test
@@ -33,6 +33,6 @@ public class MainControllerTest {
         mockMvc.perform(get("/main?name=Alexander"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("<p>Hello, Alexander!</p>")));
+                .andExpect(content().string(containsString("<div>Hello, Alexander!</div>")));
     }
 }
