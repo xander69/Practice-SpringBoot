@@ -6,12 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xander.practice.webapp.entity.Scenario;
+import org.xander.practice.webapp.entity.User;
 import org.xander.practice.webapp.exception.InvalidValueException;
 import org.xander.practice.webapp.security.AuthenticationFacade;
 import org.xander.practice.webapp.service.ScenarioService;
@@ -48,7 +50,8 @@ public class MainController {
     }
 
     @PostMapping("/")
-    public String addScenario(@RequestParam(name = "name") String name,
+    public String addScenario(@AuthenticationPrincipal User user,
+                              @RequestParam(name = "name") String name,
                               @RequestParam(name = "descr") String description,
                               Model model) {
         if (StringUtils.isBlank(name)) {
@@ -57,8 +60,8 @@ public class MainController {
         if (StringUtils.isBlank(description)) {
             throw new InvalidValueException("Scenario description cannot be empty");
         }
-        Long scenarioId = scenarioService.createScenario(name, description);
-        log.info("Created scenario with id=[{}]", scenarioId);
+        Scenario scenario = scenarioService.createScenario(name, description, user);
+        log.info("Created scenario with id=[{}]", scenario.getId());
         return "redirect:/";
     }
 

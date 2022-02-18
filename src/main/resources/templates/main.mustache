@@ -44,10 +44,11 @@
         <ul>
             {{#scenarios}}
             <li class="list-item">
-                <b>{{name}}</b> (ID: {{id}})<br />
-                {{#createDateTime}}Created: {{createDateTime}}{{/createDateTime}}<br />
-                {{#changeDateTime}}Changed: {{changeDateTime}}{{/changeDateTime}}<br />
-                <span class="description">{{description}}</span>
+                <b>{{name}}</b> (ID: {{id}})<br/>
+                {{#createDateTime}}Created: {{createDateTime}}{{/createDateTime}}<br/>
+                {{#changeDateTime}}Changed: {{changeDateTime}}{{/changeDateTime}}<br/>
+                {{#description}}<span class="description">{{description}}</span><br/>{{/description}}
+                {{#creator}}<i>(created by {{creator.username}})</i>{{/creator}}
             </li>
             {{/scenarios}}
         </ul>
