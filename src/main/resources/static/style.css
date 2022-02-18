@@ -1,0 +1,18 @@
+h1 {
+    border-bottom: cadetblue 1px solid;
+}
+#greeting, #menu, #scenario-form, #scenario-list {
+    padding: 10px 0 10px 0;
+}
+.description {
+    color: cadetblue;
+}
+.list-item {
+    padding: 5px 0 5px 0;
+}
+#logout {
+    float: right;
+}
+#logout span {
+    margin-right: 50px;
+}
