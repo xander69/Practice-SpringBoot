@@ -29,6 +29,16 @@
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-sm-2 col-form-lavel" for="switch-active">Active:</label>
+            <div class="col-sm-6">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" name="active"
+                            ${user.active?string("checked", "")}
+                           id="switch-active">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
             <label class="col-sm-2 col-form-lavel">Roles:</label>
             <div class="col-sm-6">
                 <#list roles as role>

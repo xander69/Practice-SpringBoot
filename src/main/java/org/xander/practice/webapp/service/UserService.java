@@ -3,6 +3,7 @@ package org.xander.practice.webapp.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.xander.practice.webapp.repository.UserRepository;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -28,7 +29,14 @@ public class UserService implements UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new InternalAuthenticationServiceException("Username or Password is incorrect!");
+        }
+        if (!user.getActive()) {
+            throw new InternalAuthenticationServiceException("User is not activated!");
+        }
+        return user;
     }
 
     public List<User> getAllUsers() {
@@ -48,22 +56,23 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.setActive(Boolean.TRUE);
+        user.setActive(Boolean.FALSE);
         user.setCreateDateTime(new Date());
         user.setChangeDateTime(new Date());
         user.setRoles(Collections.singleton(Role.USER));
         return userRepository.save(user);
     }
 
-    public User updateUser(User user, String username, String password, Set<String> roleNames) {
+    public User updateUser(User user, String username, Map<String, String> inputData) {
         user.getRoles().clear();
-        for (String roleName : roleNames) {
+        for (String roleName : inputData.keySet()) {
             if (Role.getNames().contains(roleName)) {
                 user.getRoles().add(Role.valueOf(roleName));
             }
         }
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(inputData.get("password"));
+        user.setActive(inputData.containsKey("active"));
         user.setChangeDateTime(new Date());
         return userRepository.save(user);
     }

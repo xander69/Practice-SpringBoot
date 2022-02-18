@@ -47,3 +47,7 @@
 8. Spring Boot: оформляем UI с Bootstrap
 
    https://www.youtube.com/watch?v=a51jGwoTNmI
+
+9. Spring Boot Mail: рассылка почты пользователям, активация аккаунта
+
+   https://www.youtube.com/watch?v=yBXs_gtSmUc

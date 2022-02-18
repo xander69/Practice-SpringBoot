@@ -45,7 +45,7 @@ public class UserController {
             @RequestParam String username,
             @RequestParam Map<String, String> form,
             @RequestParam("userId") User user) {
-        userService.updateUser(user, username, form.get("password"), form.keySet());
+        userService.updateUser(user, username, form);
         return "redirect:/user";
     }
 

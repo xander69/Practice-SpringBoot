@@ -6,7 +6,10 @@
     <thead>
     <tr>
         <th>Name</th>
+        <th>Active</th>
         <th>Roles</th>
+        <th>Created</th>
+        <th>Changed</th>
         <th>Commands</th>
     </tr>
     </thead>
@@ -14,7 +17,10 @@
     <#list users as user>
         <tr>
             <td>${user.username}</td>
+            <td>${user.active?string("Yes", "No")}</td>
             <td><#list user.roles as role>${role}<#sep>, </#list></td>
+            <td>${user.createDateTime}</td>
+            <td>${user.changeDateTime}</td>
             <td>
                 <a href="/user/${user.id}">Edit</a>
                 <a href="/user/${user.id}/del">Delete</a>

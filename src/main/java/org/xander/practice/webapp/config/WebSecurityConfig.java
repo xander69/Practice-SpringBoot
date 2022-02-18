@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.xander.practice.webapp.security.AuthFailureHandler;
 import org.xander.practice.webapp.service.UserService;
 
 @Configuration
@@ -16,10 +17,13 @@ import org.xander.practice.webapp.service.UserService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
+    private final AuthFailureHandler authFailureHandler;
 
     @Autowired
-    public WebSecurityConfig(UserService userService) {
+    public WebSecurityConfig(UserService userService,
+                             AuthFailureHandler authFailureHandler) {
         this.userService = userService;
+        this.authFailureHandler = authFailureHandler;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .loginPage("/login")
                     .defaultSuccessUrl("/")
-                    .failureUrl("/login?error=true")
+                    .failureHandler(authFailureHandler)
                     .permitAll()
                 .and()
                     .logout()
