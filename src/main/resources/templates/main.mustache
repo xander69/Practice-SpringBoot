@@ -17,9 +17,22 @@
     .list-item {
         padding: 5px 0px 5px 0px;
     }
+    #logout {
+        float: right;
+    }
+    #logout span {
+        margin-right: 50px;
+    }
 </style>
 <body>
 <div>
+    <div id="logout">
+        <form action="/logout" method="POST">
+            <span>Authenticated as <b>{{username}}</b></span>
+            <input type="submit" value="Sign Out"/>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+        </form>
+    </div>
     <h1>Main Page</h1>
     <div id="greeting">
         Hello, {{username}}!
@@ -33,16 +46,18 @@
             <input type="text" name="name" placeholder="Name:"/>
             <input type="text" name="descr" placeholder="Description:"/>
             <input type="submit" value="Add"/>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
         </form>
     </div>
     <div id="scenario-list">
         <strong>Scenario List:</strong>
         <div id="scenario-list-filter">
-           <form action="/filter" method="POST">
-               Filter:
-               <input type="text" name="filter" placeholder="Name of scenario"/>
-               <input type="submit" value="Find"/>
-           </form>
+            <form action="/filter" method="POST">
+                Filter:
+                <input type="text" name="filter" placeholder="Name of scenario"/>
+                <input type="submit" value="Find"/>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+            </form>
         </div>
         <ul>
             {{#scenarios}}

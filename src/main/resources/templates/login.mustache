@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+    <title>Web Application - Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<style type="text/css">
+    h1 {
+        border-bottom: cadetblue 1px solid;
+    }
+</style>
+<body>
+<h1>Welcome!</h1>
+<form action="/login" method="POST">
+    <div><label>Username: <input type="text" name="username"/></label></div>
+    <div><label>Password: <input type="password" name="password"/></label></div>
+    <div><input type="submit" value="Sign In"/></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+</form>
+</body>
+</html>
