@@ -1,19 +1,53 @@
 <!DOCTYPE HTML>
 <html lang="ru">
 <head>
-    <title>Getting Started: Service Web Content</title>
+    <title>Web Application - Main Page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <style type="text/css">
     h1 {
         border-bottom: cadetblue 1px solid;
     }
+    #greeting, #menu, #scenario-form, #scenario-list {
+        padding: 10px 0px 10px 0px;
+    }
+    .description {
+        color: cadetblue;
+    }
+    .list-item {
+        padding: 5px 0px 5px 0px;
+    }
 </style>
 <body>
 <div>
     <h1>Main Page</h1>
-    <div>Hello, {{name}}!</div>
-    <div><a href="/sysinfo">System Info</a></div>
+    <div id="greeting">
+        Hello, {{username}}!
+    </div>
+    <div id="menu">
+        <a href="/sysinfo">System Info</a>
+    </div>
+    <div id="scenario-form">
+        <strong>New Scenario:</strong>
+        <form action="/" method="POST">
+            <input type="text" name="name" placeholder="Name:"/>
+            <input type="text" name="descr" placeholder="Description:"/>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+    <div id="scenario-list">
+        <strong>Scenario List:</strong>
+        <ul>
+            {{#scenarios}}
+            <li class="list-item">
+                <b>{{name}}</b> (ID: {{id}})<br />
+                {{#createDateTime}}Created: {{createDateTime}}{{/createDateTime}}<br />
+                {{#changeDateTime}}Changed: {{changeDateTime}}{{/changeDateTime}}<br />
+                <span class="description">{{description}}</span>
+            </li>
+            {{/scenarios}}
+        </ul>
+    </div>
 </div>
 </body>
 </html>
