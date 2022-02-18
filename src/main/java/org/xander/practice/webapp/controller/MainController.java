@@ -12,18 +12,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.xander.practice.webapp.entity.Scenario;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.exception.InvalidValueException;
 import org.xander.practice.webapp.security.AuthenticationFacade;
 import org.xander.practice.webapp.service.ScenarioService;
+import org.xander.practice.webapp.service.UploadService;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 @Controller
@@ -33,12 +37,15 @@ public class MainController {
 
     private final ScenarioService scenarioService;
     private final AuthenticationFacade authenticationFacade;
+    private final UploadService uploadService;
 
     @Autowired
     public MainController(ScenarioService scenarioService,
-                          AuthenticationFacade authenticationFacade) {
+                          AuthenticationFacade authenticationFacade,
+                          UploadService uploadService) {
         this.scenarioService = scenarioService;
         this.authenticationFacade = authenticationFacade;
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/")
@@ -62,14 +69,13 @@ public class MainController {
     public String addScenario(@AuthenticationPrincipal User user,
                               @RequestParam(name = "name") String name,
                               @RequestParam(name = "descr") String description,
-                              Model model) {
-        if (StringUtils.isBlank(name)) {
-            throw new InvalidValueException("Scenario name cannot be empty");
+                              @RequestParam(name = "icon") MultipartFile file) throws IOException {
+        String iconFilename = null;
+        if (Objects.nonNull(file) && StringUtils.isNotBlank(file.getOriginalFilename())) {
+            Path iconFile = uploadService.saveIconToFile(file);
+            iconFilename = iconFile.toFile().getName();
         }
-        if (StringUtils.isBlank(description)) {
-            throw new InvalidValueException("Scenario description cannot be empty");
-        }
-        Scenario scenario = scenarioService.createScenario(name, description, user);
+        Scenario scenario = scenarioService.createScenario(name, description, user, iconFilename);
         log.info("Created scenario with id=[{}]", scenario.getId());
         return "redirect:/";
     }

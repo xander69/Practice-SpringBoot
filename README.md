@@ -38,3 +38,7 @@
 6. Spring Boot Security: добавляем панель администратора и роли пользователей, ограничиваем доступ
 
    https://www.youtube.com/watch?v=6dteOGWy4uk
+
+7. Spring Boot MVC: загрузка файлов на сервер и раздача статики
+
+   https://www.youtube.com/watch?v=bmMWrTMB5uo

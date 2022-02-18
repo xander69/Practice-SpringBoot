@@ -35,6 +35,8 @@ public class Scenario {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private User creator;
+    @Column(name = "ICON_FILENAME")
+    private String iconFilename;
 
     public Long getId() {
         return id;
@@ -82,6 +84,14 @@ public class Scenario {
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    public String getIconFilename() {
+        return iconFilename;
+    }
+
+    public void setIconFilename(String iconFilename) {
+        this.iconFilename = iconFilename;
     }
 
     @Override

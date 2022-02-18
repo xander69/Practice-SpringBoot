@@ -29,6 +29,12 @@
 #scenario-form, #scenario-list {
     padding: 10px 0 10px 0;
 }
+.scenario-icon {
+    width: 52px;
+    height: 52px;
+    padding-right: 5px;
+    float: left;
+}
 .description {
     color: cadetblue;
 }
