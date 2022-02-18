@@ -1,7 +1,32 @@
-h1 {
-    border-bottom: cadetblue 1px solid;
+#content {
+    background-color: white;
+    padding: 10px;
 }
-#greeting, #menu, #scenario-form, #scenario-list {
+
+#main-menu {
+    border: cadetblue 1px solid;
+    background-color: azure;
+    width: 250px;
+    padding: 10px;
+    float: right;
+}
+
+.header {
+    border-bottom: cadetblue 1px solid;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    font-size: 20pt;
+}
+
+.footer {
+    padding: 5px;
+    margin-top: 10px;
+    border-top: cadetblue 1px solid;
+    font-size: 10pt;
+    color: gray;
+}
+
+#scenario-form, #scenario-list {
     padding: 10px 0 10px 0;
 }
 .description {
@@ -18,4 +43,7 @@ h1 {
 }
 .error {
     color: red;
+}
+#auth-info {
+    margin-right: 40px;
 }

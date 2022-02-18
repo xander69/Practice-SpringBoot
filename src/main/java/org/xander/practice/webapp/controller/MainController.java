@@ -80,7 +80,9 @@ public class MainController {
     }
 
     @GetMapping("/sysinfo")
-    public String systemInfo(Model model) {
+    public String systemInfo(@AuthenticationPrincipal User user,
+                             Model model) {
+        model.addAttribute("username", user.getUsername());
         model.addAttribute("params", Arrays.asList(
                 Pair.of("Current Time", Instant.now()),
                 Pair.of("Timestamp", System.currentTimeMillis()),
