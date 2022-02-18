@@ -22,7 +22,7 @@ public class MainControllerTest {
 
     @Test
     public void main() throws Exception {
-        mockMvc.perform(get("/main"))
+        mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<div>Hello, World!</div>")));
@@ -30,9 +30,17 @@ public class MainControllerTest {
 
     @Test
     public void mainWithParam() throws Exception {
-        mockMvc.perform(get("/main?name=Alexander"))
+        mockMvc.perform(get("/?name=Alexander"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<div>Hello, Alexander!</div>")));
+    }
+
+    @Test
+    public void sysInfo() throws Exception {
+        mockMvc.perform(get("/sysinfo"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("<td>Process ID:</td>")));
     }
 }

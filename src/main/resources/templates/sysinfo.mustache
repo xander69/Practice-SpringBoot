@@ -11,9 +11,18 @@
 </style>
 <body>
 <div>
-    <h1>Main Page</h1>
-    <div>Hello, {{name}}!</div>
-    <div><a href="/sysinfo">System Info</a></div>
+    <h1>System Info</h1>
+    <table>
+        <tbody>
+        {{#params}}
+            <tr>
+                <td>{{key}}:</td>
+                <td>{{value}}</td>
+            </tr>
+        {{/params}}
+        </tbody>
+    </table>
+    <a href="/">Main Page</a>
 </div>
 </body>
 </html>
