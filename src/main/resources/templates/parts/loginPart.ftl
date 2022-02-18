@@ -1,4 +1,10 @@
 <#macro login action buttonTitle>
+<#if errorMessage??>
+    <div class="error">${errorMessage}</div><br/>
+</#if>
+<#if logoutMessage??>
+    <div class="notification">${logoutMessage}</div><br/>
+</#if>
 <form action="${action}" method="POST">
     <table>
         <tbody>

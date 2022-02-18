@@ -41,6 +41,9 @@
 #logout span {
     margin-right: 50px;
 }
+.notification {
+    color: green;
+}
 .error {
     color: red;
 }

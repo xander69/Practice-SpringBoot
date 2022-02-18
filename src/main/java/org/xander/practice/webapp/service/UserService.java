@@ -1,5 +1,6 @@
 package org.xander.practice.webapp.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,8 +36,14 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(String username, String password) {
+        if (StringUtils.isBlank(username)) {
+            throw new RegistrationException("Username must not be empty");
+        }
+        if (StringUtils.isBlank(password)) {
+            throw new RegistrationException("Password must not be empty");
+        }
         if (userRepository.existsByUsername(username)) {
-            throw new RegistrationException(String.format("User with name %s already exists", username));
+            throw new RegistrationException(String.format("User with name '%s' already exists", username));
         }
         User user = new User();
         user.setUsername(username);

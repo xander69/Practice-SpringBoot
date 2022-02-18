@@ -32,9 +32,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin()
                     .loginPage("/login")
+                    .defaultSuccessUrl("/")
+                    .failureUrl("/login?error=true")
                     .permitAll()
                 .and()
-                    .logout().permitAll();
+                    .logout()
+                    .logoutSuccessUrl("/login?logout=true")
+                    .invalidateHttpSession(true)
+                    .permitAll();
     }
 
 //    @Bean
