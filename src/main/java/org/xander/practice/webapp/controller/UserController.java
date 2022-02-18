@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xander.practice.webapp.entity.Role;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.security.AuthenticationFacade;
 import org.xander.practice.webapp.service.UserService;
 
 import java.util.Map;
@@ -21,20 +20,16 @@ import java.util.Map;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-    private final AuthenticationFacade authenticationFacade;
     private final UserService userService;
 
     @Autowired
-    public UserController(AuthenticationFacade authenticationFacade,
-                          UserService userService) {
-        this.authenticationFacade = authenticationFacade;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
     public String userList(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("username", authenticationFacade.getAuthentication().getName());
         return "userList";
     }
 
@@ -42,7 +37,6 @@ public class UserController {
     public String userEdit(@PathVariable User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
-        model.addAttribute("username", authenticationFacade.getAuthentication().getName());
         return "userEdit";
     }
 

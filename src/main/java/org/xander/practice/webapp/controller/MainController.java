@@ -5,7 +5,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.xander.practice.webapp.entity.Scenario;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.security.AuthenticationFacade;
 import org.xander.practice.webapp.service.ScenarioService;
 import org.xander.practice.webapp.service.UploadService;
 
@@ -36,15 +34,12 @@ public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     private final ScenarioService scenarioService;
-    private final AuthenticationFacade authenticationFacade;
     private final UploadService uploadService;
 
     @Autowired
     public MainController(ScenarioService scenarioService,
-                          AuthenticationFacade authenticationFacade,
                           UploadService uploadService) {
         this.scenarioService = scenarioService;
-        this.authenticationFacade = authenticationFacade;
         this.uploadService = uploadService;
     }
 
@@ -52,7 +47,6 @@ public class MainController {
     public String main(
             @RequestParam(required = false, defaultValue = "") String filter,
             Model model) {
-        Authentication authentication = authenticationFacade.getAuthentication();
         final List<Scenario> scenarios;
         if (StringUtils.isBlank(filter)) {
             scenarios = scenarioService.getAllScenarios();
@@ -60,7 +54,6 @@ public class MainController {
             scenarios = scenarioService.filterScenarios(filter);
         }
         model.addAttribute("filter", filter);
-        model.addAttribute("username", authentication.getName());
         model.addAttribute("scenarios", scenarios);
         return "main";
     }
