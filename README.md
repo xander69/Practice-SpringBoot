@@ -1,5 +1,18 @@
 ## Spring Boot Start
 
+### Stack
+
+* Maven
+* Java 8
+* Spring Boot
+* Spring Data JPA
+* Spring MVC
+* Spring Security
+* Spring Test
+* Template Engines: thymeleaf, mustache, freemarker
+
+### References
+
 1. Spring Boot: делаем простое веб приложение на Java (простой сайт)
 
    https://www.youtube.com/watch?v=jH17YkBTpI4
@@ -21,3 +34,7 @@
 5. Spring Boot Freemarker: подключаем шаблонизатор Freemarker
 
    https://www.youtube.com/watch?v=8MlXahJXLFg
+
+6. Spring Boot Security: добавляем панель администратора и роли пользователей, ограничиваем доступ
+
+   https://www.youtube.com/watch?v=6dteOGWy4uk
