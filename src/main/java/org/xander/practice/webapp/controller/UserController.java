@@ -48,4 +48,10 @@ public class UserController {
         userService.updateUser(user, username, form.get("password"), form.keySet());
         return "redirect:/user";
     }
+
+    @GetMapping("{user}/del")
+    public String userDelete(@PathVariable User user) {
+        userService.deleteUser(user);
+        return "redirect:/user";
+    }
 }
