@@ -47,3 +47,12 @@
 #auth-info {
     margin-right: 40px;
 }
+#user-table {
+    width: 70%;
+}
+#user-table th {
+    width: 25%;
+}
+th {
+    text-align: start;
+}
