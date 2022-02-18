@@ -1,5 +1,6 @@
 package org.xander.practice.webapp.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.xander.practice.webapp.entity.Scenario;
 import org.xander.practice.webapp.service.ScenarioService;
 
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -47,6 +50,19 @@ public class MainController {
         Long scenarioId = scenarioService.createScenario(name, description);
         log.info("Created scenario with id=[{}]", scenarioId);
         return "redirect:/";
+    }
+
+    @PostMapping("/filter")
+    public String filterScenarios(@RequestParam(name = "filter") String filter, Model model) {
+        List<Scenario> scenarios;
+        if (StringUtils.isNotBlank(filter)) {
+            scenarios = scenarioService.filterScenarios(filter);
+        } else {
+            scenarios = scenarioService.getAllScenarios();
+        }
+        model.addAttribute("scenarios", scenarios);
+        model.addAttribute("username", "???");
+        return "main";
     }
 
     @GetMapping("/sysinfo")

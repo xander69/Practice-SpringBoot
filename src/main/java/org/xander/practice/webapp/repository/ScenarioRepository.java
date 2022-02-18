@@ -8,4 +8,6 @@ import java.util.List;
 public interface ScenarioRepository extends CrudRepository<Scenario, Long> {
     @Override
     List<Scenario> findAll();
+
+    List<Scenario> findByNameContainingIgnoreCase(String name);
 }

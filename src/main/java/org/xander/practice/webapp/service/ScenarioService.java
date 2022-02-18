@@ -22,6 +22,10 @@ public class ScenarioService {
         return scenarioRepository.findAll();
     }
 
+    public List<Scenario> filterScenarios(String name) {
+        return scenarioRepository.findByNameContainingIgnoreCase(name);
+    }
+
     public Long createScenario(String name, String description) {
         Scenario scenario = new Scenario();
         scenario.setName(name);
