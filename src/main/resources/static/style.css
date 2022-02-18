@@ -44,6 +44,9 @@
 .error {
     color: red;
 }
+.comment {
+    color: gray;
+}
 #auth-info {
     margin-right: 40px;
 }

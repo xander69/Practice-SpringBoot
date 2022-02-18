@@ -13,10 +13,11 @@
 <div id="scenario-list">
     <strong>Scenario List:</strong>
     <div id="scenario-list-filter">
-        <form action="/filter" method="POST">
+        <form action="/" method="GET">
             Filter:
-            <input type="text" name="filter" placeholder="Name of scenario"/>
+            <input type="text" name="filter" placeholder="Name of scenario" value="${filter}"/>
             <input type="submit" value="Find"/>
+            <span class="comment">(found ${scenarios?size} scenarios)</span>
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         </form>
     </div>

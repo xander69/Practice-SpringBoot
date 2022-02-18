@@ -42,10 +42,19 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String main(Model model) {
+    public String main(
+            @RequestParam(required = false, defaultValue = "") String filter,
+            Model model) {
         Authentication authentication = authenticationFacade.getAuthentication();
+        final List<Scenario> scenarios;
+        if (StringUtils.isBlank(filter)) {
+            scenarios = scenarioService.getAllScenarios();
+        } else {
+            scenarios = scenarioService.filterScenarios(filter);
+        }
+        model.addAttribute("filter", filter);
         model.addAttribute("username", authentication.getName());
-        model.addAttribute("scenarios", scenarioService.getAllScenarios());
+        model.addAttribute("scenarios", scenarios);
         return "main";
     }
 
@@ -63,20 +72,6 @@ public class MainController {
         Scenario scenario = scenarioService.createScenario(name, description, user);
         log.info("Created scenario with id=[{}]", scenario.getId());
         return "redirect:/";
-    }
-
-    @PostMapping("/filter")
-    public String filterScenarios(@RequestParam(name = "filter") String filter, Model model) {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        List<Scenario> scenarios;
-        if (StringUtils.isNotBlank(filter)) {
-            scenarios = scenarioService.filterScenarios(filter);
-        } else {
-            scenarios = scenarioService.getAllScenarios();
-        }
-        model.addAttribute("scenarios", scenarios);
-        model.addAttribute("username", authentication.getName());
-        return "main";
     }
 
     @GetMapping("/sysinfo")
