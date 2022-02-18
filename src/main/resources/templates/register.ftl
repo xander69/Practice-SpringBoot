@@ -2,5 +2,6 @@
 <#import "parts/loginPart.ftl" as l>
 
 <@c.page "Registration">
-    <@l.login "/register" "Register"/>
+    <h1 class="mb-3">Registration</h1>
+    <@l.login "/register" true/>
 </@c.page>

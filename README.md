@@ -10,6 +10,7 @@
 * Spring Security
 * Spring Test
 * Template Engines: thymeleaf, mustache, freemarker
+* Bootstrap 5
 
 ### References
 
@@ -42,3 +43,7 @@
 7. Spring Boot MVC: загрузка файлов на сервер и раздача статики
 
    https://www.youtube.com/watch?v=bmMWrTMB5uo
+
+8. Spring Boot: оформляем UI с Bootstrap
+
+   https://www.youtube.com/watch?v=a51jGwoTNmI

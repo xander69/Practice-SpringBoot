@@ -1,44 +1,70 @@
 <#import "parts/commonPart.ftl" as c>
 
-<@c.page "Scenarios">
-<div id="scenario-form">
-    <strong>New Scenario:</strong>
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Name:"/>
-        <input type="text" name="descr" placeholder="Description:"/>
-        <input type="file" name="icon" placeholder="Icon:"/>
-        <input type="submit" value="Add"/>
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-    </form>
-</div>
-<div id="scenario-list">
-    <strong>Scenario List:</strong>
-    <div id="scenario-list-filter">
-        <form action="/" method="GET">
-            Filter:
-            <input type="text" name="filter" placeholder="Name of scenario" value="${filter!}"/>
-            <input type="submit" value="Find"/>
-            <span class="comment">(found ${scenarios?size} scenarios)</span>
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        </form>
-    </div>
-    <ul>
-    <#list scenarios as scenario>
-        <li class="list-item">
-            <#if scenario.iconFilename??>
-                <img class="scenario-icon" src="/img/${scenario.iconFilename}""/>
-            </#if>
-            <b>${scenario.name}</b> (ID: ${scenario.id})
-            <#if scenario.createDateTime??>Created: ${scenario.createDateTime}<br/></#if>
-            <#if scenario.changeDateTime??>Changed: ${scenario.changeDateTime}<br/></#if>
-            <#if scenario.description??><span class="description">${scenario.description}</span><br/></#if>
-            <#if scenario.creator??><i>(created by ${scenario.creator.username})</i></#if>
-        </li>
-    <#else>
-        <div>
-            <i>No scenarios</i>
+<@c.page "">
+<h1 class="mb-3">Scenario List</h1>
+
+<form action="/" method="get" class="form-inline">
+    <div class="row">
+        <div class="col">
+            <input type="text" name="filter" value="${filter!}"
+                   class="form-control"
+                   placeholder="Search by name"/>
         </div>
-    </#list>
-    </ul>
+        <div class="col">
+            <button type="submit" class="btn btn-primary c">Search</button>
+        </div>
+    </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+</form>
+
+<form action="/" method="post" enctype="multipart/form-data">
+    <div class="row mt-3">
+        <div class="col">
+            <input type="text" name="name" placeholder="Name" class="form-control"/>
+        </div>
+        <div class="col">
+            <input type="text" name="descr" placeholder="Description" class="form-control"/>
+        </div>
+        <div class="col">
+            <input type="file" name="icon" class="custom-file-input" id="customFile"/>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">New Scenario</button>
+        </div>
+    </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+</form>
+
+<#list scenarios as scenario>
+<div class="card my-3">
+    <div class="m-2">
+        <#if scenario.iconFilename??>
+        <img src="/img/${scenario.iconFilename}"
+             class="rounded float-left mr-3"
+             style="width: 50px; height: 50px;"
+             alt="${scenario.iconFilename}"/>
+        </#if>
+        <b>${scenario.name}</b><br/>
+        <i>${scenario.description}</i>
+    </div>
+    <div class="card-footer text-muted row" style="font-size:0.7rem;">
+        <div class="col">
+            ID: ${scenario.id}
+        </div>
+        <div class="col">
+            <#if scenario.createDateTime??> Created: ${scenario.createDateTime}</#if>
+        </div>
+        <div class="col">
+            <#if scenario.changeDateTime??> Changed: ${scenario.changeDateTime}</#if>
+        </div>
+        <div class="col">
+            <#if scenario.creator??> Created by ${scenario.creator.username}</#if>
+        </div>
+    </div>
 </div>
+<#else>
+    <div>
+        No scenarios
+    </div>
+</#list>
 </@c.page>

@@ -1,35 +1,51 @@
 <#import "parts/commonPart.ftl" as c>
 
-<@c.page "User Edit '${user.username}'">
-<form action="/user" method="post">
-    <table>
-        <tbody>
-        <tr>
-            <th>ID:</th>
-            <td>${user.id}</td>
-        </tr>
-        <tr>
-            <th>Username:</th>
-            <td><input type="text" name="username" value="${user.username}"/></td>
-        </tr>
-        <tr>
-            <th>Password:</th>
-            <td><input type="password" name="password" value="${user.password}"/></td>
-        </tr>
-        <tr>
-            <th>Roles:</th>
-            <td>
-            <#list roles as role>
-                <div>
-                    <label><input type="checkbox" name="${role}" ${user.roles?seq_contains(role)?string("checked", "")}/>${role}</label>
-                </div>
-            </#list>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-    <input type="hidden" name="userId" value="${user.id}"/>
-    <input type="submit" value="Save"/>
-</form>
+<@c.page "User Edit">
+<h1 class="mb-3">Edit user '${user.username}'</h1>
+<div class="form-group mt-3">
+    <form action="/user" method="post">
+        <div class="form-group row">
+            <div class="col-sm-2">
+                ID:
+            </div>
+            <div class="col-sm-6">
+                ${user.id}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-lavel" for="editUsername">Username:</label>
+            <div class="col-sm-6">
+                <input type="text" name="username"
+                       value="${user.username}"
+                       class="form-control" id="editUsername"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-lavel" for="editPassword">Password:</label>
+            <div class="col-sm-6">
+                <input type="password" name="password"
+                       value="${user.password}"
+                       class="form-control" id="editPassword"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-lavel">Roles:</label>
+            <div class="col-sm-6">
+                <#list roles as role>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="${role}"
+                                ${user.roles?seq_contains(role)?string("checked", "")}
+                               id="switch-${role}">
+                        <label class="form-check-label" for="switch-${role}">${role}</label>
+                    </div>
+                </#list>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="hidden" name="userId" value="${user.id}"/>
+    </form>
+</div>
 </@c.page>
