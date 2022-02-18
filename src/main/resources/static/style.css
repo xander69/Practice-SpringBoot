@@ -16,3 +16,6 @@ h1 {
 #logout span {
     margin-right: 50px;
 }
+.error {
+    color: red;
+}
