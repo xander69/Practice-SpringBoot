@@ -29,6 +29,20 @@
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-sm-2 col-form-lavel" for="editEmail">Email:</label>
+            <div class="col-sm-6">
+                <input type="text" name="email"
+                       value="<#if user.email??>${user.email}</#if>"
+                       class="form-control" id="editEmail"/>
+            </div>
+        </div>
+        <#if user.activationCode??>
+        <div class="form-group row">
+            <div class="col-sm-2 col-form-lavel">Activation code:</div>
+            <div class="col-sm-6">${user.activationCode}</div>
+        </div>
+        </#if>
+        <div class="form-group row">
             <label class="col-sm-2 col-form-lavel" for="switch-active">Active:</label>
             <div class="col-sm-6">
                 <div class="form-check form-switch">

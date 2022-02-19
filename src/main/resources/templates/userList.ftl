@@ -8,6 +8,7 @@
         <th>Name</th>
         <th>Active</th>
         <th>Roles</th>
+        <th>Email</th>
         <th>Created</th>
         <th>Changed</th>
         <th>Commands</th>
@@ -19,6 +20,7 @@
             <td>${user.username}</td>
             <td>${user.active?string("Yes", "No")}</td>
             <td><#list user.roles as role>${role}<#sep>, </#list></td>
+            <td>${user.email!}</td>
             <td>${user.createDateTime}</td>
             <td>${user.changeDateTime}</td>
             <td>

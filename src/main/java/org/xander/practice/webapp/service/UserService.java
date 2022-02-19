@@ -94,6 +94,7 @@ public class UserService implements UserDetailsService {
         user.setUsername(username);
         user.setPassword(inputData.get("password"));
         user.setActive(inputData.containsKey("active"));
+        user.setEmail(inputData.get("email"));
         user.setChangeDateTime(new Date());
         return userRepository.save(user);
     }
