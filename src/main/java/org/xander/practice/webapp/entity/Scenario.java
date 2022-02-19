@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,7 +20,8 @@ import java.util.Objects;
 public class Scenario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scenario_seq")
+    @SequenceGenerator(name = "scenario_seq", sequenceName = "scenario_sequence", allocationSize = 1)
     @Column(name = "ID")
     private Long id;
     @Column(name = "NAME")

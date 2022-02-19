@@ -12,6 +12,7 @@
 * Spring Test
 * Template Engines: thymeleaf, mustache, freemarker
 * Bootstrap 5
+* FlyWay
 
 ### References
 
@@ -54,3 +55,36 @@
    https://www.youtube.com/watch?v=yBXs_gtSmUc
    https://temp-mail.org/
 
+10. Spring Boot FlyWay: миграции БД, профиль пользователя
+
+    https://www.youtube.com/watch?v=ArM7nCys4hY
+
+    Для FlyWay требуется пустая схема, чтобы он заработал.
+    Поэтому сначала дропаем БД:
+     ```postgresql
+     drop database <database_name>;
+     ```
+    Потом создаем её:
+     ```postgresql
+     create database <database_name>;
+     ```
+    Если при дропе вылезел ошибка типа:
+    > [55006] ОШИБКА: база данных "<database_name>" занята другими пользователями
+
+    то нужно посмотреть активные сессии с помощью запроса:
+     ```postgresql
+     select *
+     from pg_stat_activity
+     where pg_stat_activity.datname = '<database_name>';
+     ```
+    и киллнуть их с помощью запроса:
+     ```postgresql
+     select pg_terminate_backend (pg_stat_activity.pid)
+     from pg_stat_activity
+     where pg_stat_activity.datname = '<database_name>';
+     ```
+    потом повторить дроп БД.
+    Посмотреть историю миграций:
+    ```postgresql
+    select * from flyway_schema_history;
+    ```
