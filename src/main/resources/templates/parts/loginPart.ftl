@@ -6,9 +6,9 @@
         ${errorMessage}
     </div>
 </#if>
-<#if logoutMessage??>
+<#if successMessage??>
     <div class="valid-feedback d-block mb-3">
-        ${logoutMessage}
+        ${successMessage}
     </div>
 </#if>
 <form action="${action}" method="post">
@@ -30,6 +30,17 @@
                    id="loginPassword"/>
         </div>
     </div>
+    <#if isRegisterForm>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-lavel" for="loginEmail">E-Mail:</label>
+        <div class="col-sm-6">
+            <input type="email" name="email"
+                   class="form-control"
+                   placeholder="some@some.com"
+                   id="loginEmail"/>
+        </div>
+    </div>
+    </#if>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <div>
     <#if isRegisterForm>

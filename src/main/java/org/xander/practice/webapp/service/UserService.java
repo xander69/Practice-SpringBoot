@@ -7,6 +7,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.xander.practice.webapp.entity.Role;
 import org.xander.practice.webapp.entity.User;
 import org.xander.practice.webapp.exception.RegistrationException;
@@ -16,15 +17,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final MailSender mailSender;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       MailSender mailSender) {
         this.userRepository = userRepository;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
     }
 
-    public User createUser(String username, String password) {
+    public User createUser(String username, String password, String email) {
         if (StringUtils.isBlank(username)) {
             throw new RegistrationException("Username must not be empty");
         }
@@ -56,10 +62,25 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+        user.setEmail(email);
         user.setActive(Boolean.FALSE);
+        user.setActivationCode(UUID.randomUUID().toString());
         user.setCreateDateTime(new Date());
         user.setChangeDateTime(new Date());
         user.setRoles(Collections.singleton(Role.USER));
+
+
+        if (StringUtils.isNotBlank(user.getEmail())) {
+            String baseUrl =
+                    ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            String message = String.format("" +
+                            "Hello, %s!\n" +
+                            "Welcome to Web Application.\n" +
+                            "Please, visit next link: %s/activate/%s",
+                    user.getUsername(), baseUrl, user.getActivationCode());
+            mailSender.send(user.getEmail(), "Activation code", message);
+        }
+
         return userRepository.save(user);
     }
 
@@ -75,6 +96,17 @@ public class UserService implements UserDetailsService {
         user.setActive(inputData.containsKey("active"));
         user.setChangeDateTime(new Date());
         return userRepository.save(user);
+    }
+
+    public boolean activateUser(String activationCode) {
+        User user = userRepository.findByActivationCode(activationCode);
+        if (Objects.isNull(user)) {
+            return false;
+        }
+        user.setActivationCode(null);
+        user.setActive(true);
+        userRepository.save(user);
+        return true;
     }
 
     public void deleteUser(User user) {

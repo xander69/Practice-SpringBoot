@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xander.practice.webapp.entity.User;
@@ -39,7 +40,7 @@ public class LoginController {
             authFailureHandler.setAuthException(null);
         }
         if (StringUtils.isNotBlank(logout)) {
-            model.addAttribute("logoutMessage", "You have been successfully logged out!");
+            model.addAttribute("successMessage", "You have been successfully logged out!");
         }
         return "login";
     }
@@ -52,12 +53,23 @@ public class LoginController {
     @PostMapping("/register")
     public String addUser(User user, Model model) {
         try {
-            User newUser = userService.createUser(user.getUsername(), user.getPassword());
+            User newUser = userService.createUser(user.getUsername(), user.getPassword(), user.getEmail());
             log.info("Created user with id=[{}]", newUser.getId());
         } catch (RegistrationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "/register";
         }
         return "redirect:/login";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("successMessage", "User successfully activated! Try Sign In...");
+        } else {
+            model.addAttribute("errorMessage", "Activation code is not found!");
+        }
+        return "login";
     }
 }

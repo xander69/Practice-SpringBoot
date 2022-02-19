@@ -8,6 +8,7 @@
 * Spring Data JPA
 * Spring MVC
 * Spring Security
+* Spring Mail
 * Spring Test
 * Template Engines: thymeleaf, mustache, freemarker
 * Bootstrap 5
@@ -51,3 +52,5 @@
 9. Spring Boot Mail: рассылка почты пользователям, активация аккаунта
 
    https://www.youtube.com/watch?v=yBXs_gtSmUc
+   https://temp-mail.org/
+

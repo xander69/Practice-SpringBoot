@@ -6,5 +6,7 @@ import org.xander.practice.webapp.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
 
+    User findByActivationCode(String activationCode);
+
     boolean existsByUsername(String username);
 }
