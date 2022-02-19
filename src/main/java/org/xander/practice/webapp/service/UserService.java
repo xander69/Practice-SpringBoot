@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.xander.practice.webapp.entity.Role;
 import org.xander.practice.webapp.entity.User;
+import org.xander.practice.webapp.exception.InvalidValueException;
 import org.xander.practice.webapp.exception.RegistrationException;
 import org.xander.practice.webapp.repository.UserRepository;
 
@@ -68,19 +69,7 @@ public class UserService implements UserDetailsService {
         user.setCreateDateTime(new Date());
         user.setChangeDateTime(new Date());
         user.setRoles(Collections.singleton(Role.USER));
-
-
-        if (StringUtils.isNotBlank(user.getEmail())) {
-            String baseUrl =
-                    ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            String message = String.format("" +
-                            "Hello, %s!\n" +
-                            "Welcome to Web Application.\n" +
-                            "Please, visit next link: %s/activate/%s",
-                    user.getUsername(), baseUrl, user.getActivationCode());
-            mailSender.send(user.getEmail(), "Activation code", message);
-        }
-
+        sendActivationMessage(user);
         return userRepository.save(user);
     }
 
@@ -106,11 +95,44 @@ public class UserService implements UserDetailsService {
         }
         user.setActivationCode(null);
         user.setActive(true);
+        user.setChangeDateTime(new Date());
         userRepository.save(user);
         return true;
     }
 
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    public void updateProfile(User user, String password, String email) {
+        if (StringUtils.isBlank(password)) {
+            throw new InvalidValueException("Password must not be empty");
+        }
+        boolean isEmailChanged = !Objects.equals(email, user.getUsername());
+        if (isEmailChanged) {
+            user.setEmail(email);
+            if (StringUtils.isNotBlank(email)) {
+                user.setActivationCode(UUID.randomUUID().toString());
+            }
+        }
+        user.setPassword(password);
+        user.setChangeDateTime(new Date());
+        userRepository.save(user);
+        if (isEmailChanged) {
+            sendActivationMessage(user);
+        }
+    }
+
+    private void sendActivationMessage(User user) {
+        if (StringUtils.isNotBlank(user.getEmail())) {
+            String baseUrl =
+                    ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            String message = String.format("" +
+                            "Hello, %s!\n" +
+                            "Welcome to Web Application.\n" +
+                            "Please, visit next link: %s/activate/%s",
+                    user.getUsername(), baseUrl, user.getActivationCode());
+            mailSender.send(user.getEmail(), "Activation code", message);
+        }
     }
 }

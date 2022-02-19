@@ -15,6 +15,9 @@
             </#if>
             <#if isAuth>
             <li class="nav-item">
+                <a class="nav-link" href="/user/profile">Profile</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="/sysinfo">System Info</a>
             </li>
             </#if>
