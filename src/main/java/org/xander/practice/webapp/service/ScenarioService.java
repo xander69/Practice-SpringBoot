@@ -3,22 +3,27 @@ package org.xander.practice.webapp.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.xander.practice.webapp.entity.Scenario;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.exception.InvalidValueException;
 import org.xander.practice.webapp.repository.ScenarioRepository;
 
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ScenarioService {
 
     private final ScenarioRepository scenarioRepository;
+    private final UploadService uploadService;
 
     @Autowired
-    public ScenarioService(ScenarioRepository scenarioRepository) {
+    public ScenarioService(ScenarioRepository scenarioRepository,
+                           UploadService uploadService) {
         this.scenarioRepository = scenarioRepository;
+        this.uploadService = uploadService;
     }
 
     public List<Scenario> getAllScenarios() {
@@ -29,20 +34,19 @@ public class ScenarioService {
         return scenarioRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public Scenario createScenario(String name, String description, User creator, String iconFilename) {
-        if (StringUtils.isBlank(name)) {
-            throw new InvalidValueException("Scenario name cannot be empty");
-        }
-        if (StringUtils.isBlank(description)) {
-            throw new InvalidValueException("Scenario description cannot be empty");
-        }
-        Scenario scenario = new Scenario();
-        scenario.setName(name);
-        scenario.setDescription(description);
+    public Scenario createScenario(Scenario scenario, MultipartFile file, User user)  {
+        scenario.setCreator(user);
         scenario.setCreateDateTime(new Date());
         scenario.setChangeDateTime(new Date());
-        scenario.setCreator(creator);
-        scenario.setIconFilename(iconFilename);
+        scenario.setIconFilename(uploadIcon(file));
         return scenarioRepository.save(scenario);
+    }
+
+    private String uploadIcon(MultipartFile file) {
+        if (Objects.nonNull(file) && StringUtils.isNotBlank(file.getOriginalFilename())) {
+            Path iconFile = uploadService.saveIconToFile(file);
+            return iconFile.toFile().getName();
+        }
+        return null;
     }
 }

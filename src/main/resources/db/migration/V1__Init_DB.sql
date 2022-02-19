@@ -26,7 +26,7 @@ create table scenario
 (
     id            bigint not null primary key,
     name          varchar(255),
-    descr         varchar(255),
+    descr         varchar(2000),
     icon_filename varchar(255),
     create_dt     timestamp,
     change_dt     timestamp,

@@ -1,5 +1,7 @@
 package org.xander.practice.webapp.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,8 +28,12 @@ public class Scenario {
     @Column(name = "ID")
     private Long id;
     @Column(name = "NAME")
+    @NotBlank(message = "Fill the scenario name")
+    @Length(max = 255, message = "Scenario name to long (max 255 symbols)")
     private String name;
     @Column(name = "DESCR")
+    @NotBlank(message = "Fill the scenario description")
+    @Length(max = 2000, message = "Scenario description to long (max 2000 symbols)")
     private String description;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DT")

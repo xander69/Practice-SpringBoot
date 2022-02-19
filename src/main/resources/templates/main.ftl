@@ -20,10 +20,22 @@
 <form action="/" method="post" enctype="multipart/form-data">
     <div class="row mt-3">
         <div class="col">
-            <input type="text" name="name" placeholder="Name" class="form-control"/>
+            <input type="text" name="name"
+                   placeholder="Name"
+                   value="<#if scenario??>${scenario.name!}</#if>"
+                   class="form-control${(nameError??)?string(' is-invalid', '')}"/>
+            <#if nameError??>
+            <div class="invalid-feedback">${nameError}</div>
+            </#if>
         </div>
         <div class="col">
-            <input type="text" name="descr" placeholder="Description" class="form-control"/>
+            <input type="text" name="description"
+                   placeholder="Description"
+                   value="<#if scenario??>${scenario.description!}</#if>"
+                   class="form-control${(descriptionError??)?string(' is-invalid', '')}"/>
+            <#if descriptionError??>
+            <div class="invalid-feedback">${descriptionError}</div>
+            </#if>
         </div>
         <div class="col">
             <input type="file" name="icon" class="custom-file-input" id="customFile"/>
@@ -47,18 +59,20 @@
         <b>${scenario.name}</b><br/>
         <i>${scenario.description}</i>
     </div>
-    <div class="card-footer text-muted row" style="font-size:0.7rem;">
-        <div class="col">
-            ID: ${scenario.id}
-        </div>
-        <div class="col">
-            <#if scenario.createDateTime??> Created: ${scenario.createDateTime}</#if>
-        </div>
-        <div class="col">
-            <#if scenario.changeDateTime??> Changed: ${scenario.changeDateTime}</#if>
-        </div>
-        <div class="col">
-            <#if scenario.creator??> Created by ${scenario.creator.username}</#if>
+    <div class="card-footer text-muted" style="font-size:0.7rem;">
+        <div class="row">
+            <div class="col">
+                ID: ${scenario.id}
+            </div>
+            <div class="col">
+                <#if scenario.createDateTime??> Created: ${scenario.createDateTime?datetime}</#if>
+            </div>
+            <div class="col">
+                <#if scenario.changeDateTime??> Changed: ${scenario.changeDateTime?datetime}</#if>
+            </div>
+            <div class="col">
+                <#if scenario.creator??> Created by ${scenario.creator.username}</#if>
+            </div>
         </div>
     </div>
 </div>
