@@ -2,15 +2,16 @@ package org.xander.practice.webapp.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.xander.practice.webapp.entity.Role;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.exception.InvalidValueException;
 import org.xander.practice.webapp.exception.RegistrationException;
 import org.xander.practice.webapp.repository.UserRepository;
 
@@ -26,12 +27,15 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final MailSender mailSender;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository,
-                       MailSender mailSender) {
+                       MailSender mailSender,
+                       @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -62,7 +66,7 @@ public class UserService implements UserDetailsService {
         }
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEmail(email);
         user.setActive(Boolean.FALSE);
         user.setActivationCode(UUID.randomUUID().toString());
@@ -81,7 +85,7 @@ public class UserService implements UserDetailsService {
             }
         }
         user.setUsername(username);
-        user.setPassword(inputData.get("password"));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(inputData.containsKey("active"));
         user.setEmail(inputData.get("email"));
         user.setChangeDateTime(new Date());
@@ -105,9 +109,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateProfile(User user, String password, String email) {
-        if (StringUtils.isBlank(password)) {
-            throw new InvalidValueException("Password must not be empty");
-        }
         boolean isEmailChanged = !Objects.equals(email, user.getUsername());
         if (isEmailChanged) {
             user.setEmail(email);
@@ -115,7 +116,9 @@ public class UserService implements UserDetailsService {
                 user.setActivationCode(UUID.randomUUID().toString());
             }
         }
-        user.setPassword(password);
+        if (StringUtils.isNotBlank(password) && !Objects.equals(password, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         user.setChangeDateTime(new Date());
         userRepository.save(user);
         if (isEmailChanged) {

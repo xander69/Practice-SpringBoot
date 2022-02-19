@@ -11,7 +11,7 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-lavel" for="loginPassword">Password:</label>
         <div class="col-sm-6">
-            <input type="password" name="password" class="form-control" id="loginPassword" value="${password}"/>
+            <input type="password" name="password" class="form-control" id="loginPassword" value=""/>
         </div>
     </div>
     <div class="form-group row">

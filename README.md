@@ -88,3 +88,7 @@
     ```postgresql
     select * from flyway_schema_history;
     ```
+
+11. Spring Boot: bean validation, шифрование паролей
+
+    https://www.youtube.com/watch?v=AdLXmE4rjy4
