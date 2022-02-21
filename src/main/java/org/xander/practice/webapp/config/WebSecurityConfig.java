@@ -43,6 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .failureHandler(authFailureHandler)
                     .permitAll()
                 .and()
+                    .rememberMe()
+                .and()
                     .logout()
                     .logoutSuccessUrl("/login?logout=true")
                     .invalidateHttpSession(true)

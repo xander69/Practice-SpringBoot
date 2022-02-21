@@ -31,3 +31,4 @@ out/
 target/
 upload/
 mail/
+application-dev.properties

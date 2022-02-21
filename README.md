@@ -11,6 +11,7 @@
 * Spring Mail
 * Spring DevTools
 * Spring Test
+* Spring Session Jdbc
 * Template Engines: thymeleaf, mustache, freemarker
 * Bootstrap 5
 * FlyWay
@@ -94,5 +95,11 @@
 
     https://www.youtube.com/watch?v=AdLXmE4rjy4
 
+12. Spring Boot: reCaptcha, rest client, rememberMe и сохранение сессий в БД
+
+    https://www.youtube.com/watch?v=7cDpbAbhyjc
+
     Админка управления рекаптчей (требуется залогиниться под google-учеткой):
     >https://www.google.com/recaptcha/admin/create
+ 
+    При использовании spring session jdbc будут созданы таблицы spring_session, spring_session_attributes
