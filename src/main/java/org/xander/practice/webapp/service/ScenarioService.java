@@ -42,6 +42,23 @@ public class ScenarioService {
         return scenarioRepository.save(scenario);
     }
 
+    public void updateScenario(Scenario scenario, String name, String description,
+                               MultipartFile file, Long userId) {
+        if (Objects.equals(scenario.getCreator().getId(), userId)) {
+            if (StringUtils.isNotBlank(name)) {
+                scenario.setName(name);
+            }
+            if (StringUtils.isNotBlank(description)) {
+                scenario.setDescription(description);
+            }
+            if (StringUtils.isNotBlank(file.getOriginalFilename())) {
+                scenario.setIconFilename(uploadIcon(file));
+            }
+            scenario.setChangeDateTime(new Date());
+            scenarioRepository.save(scenario);
+        }
+    }
+
     private String uploadIcon(MultipartFile file) {
         if (Objects.nonNull(file) && StringUtils.isNotBlank(file.getOriginalFilename())) {
             Path iconFile = uploadService.saveIconToFile(file);

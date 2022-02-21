@@ -3,6 +3,7 @@ package org.xander.practice.webapp.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -14,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -61,6 +63,8 @@ public class User implements UserDetails {
     private String email;
     @Column(name = "ACTIVATION_CODE")
     private String activationCode;
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Scenario> scenarios;
 
     public Long getId() {
         return id;
@@ -171,6 +175,27 @@ public class User implements UserDetails {
 
     public void setPassword2(String password2) {
         this.password2 = password2;
+    }
+
+    public Set<Scenario> getScenarios() {
+        return scenarios;
+    }
+
+    public void setScenarios(Set<Scenario> scenarios) {
+        this.scenarios = scenarios;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

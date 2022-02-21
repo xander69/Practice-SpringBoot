@@ -103,3 +103,15 @@
     >https://www.google.com/recaptcha/admin/create
  
     При использовании spring session jdbc будут созданы таблицы spring_session, spring_session_attributes
+
+13. Spring Boot: публикуем приложение на сервер (deploy)
+
+    https://www.youtube.com/watch?v=wj7j92w2eLw
+
+14. Spring Boot: публикуем приложение (из Windows) на linux сервер (deploy с комментариями)
+
+    https://www.youtube.com/watch?v=kT_xEflmaGE
+
+15. Spring Boot: JPA oneToMany - сообщения пользователя, редактор сообщений
+
+    https://www.youtube.com/watch?v=-gdDklUu03k    

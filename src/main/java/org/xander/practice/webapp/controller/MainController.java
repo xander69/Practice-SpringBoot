@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 @Controller
@@ -88,5 +90,30 @@ public class MainController {
                 Pair.of("User Dir", System.getProperty("user.dir"))
         ));
         return "sysinfo";
+    }
+
+    @GetMapping("/user-scenarios/{user}")
+    public String userScenarios(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user,
+            @RequestParam(value = "scenario", required = false) Scenario scenario,
+            Model model
+    ) {
+        Set<Scenario> scenarios = user.getScenarios();
+        model.addAttribute("scenarios", scenarios);
+        model.addAttribute("scenario", scenario);
+        model.addAttribute("isCurrentUser", currentUser.equals(user));
+        return "userScenarios";
+    }
+
+    @PostMapping("/user-scenarios/{userId}")
+    public String updateMessage(
+            @PathVariable Long userId,
+            @RequestParam(value = "id") Scenario scenario,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("icon") MultipartFile file) {
+        scenarioService.updateScenario(scenario, name, description, file, userId);
+        return "redirect:/user-scenarios/" + userId;
     }
 }
