@@ -93,3 +93,6 @@
 11. Spring Boot: bean validation, шифрование паролей
 
     https://www.youtube.com/watch?v=AdLXmE4rjy4
+
+    Админка управления рекаптчей (требуется залогиниться под google-учеткой):
+    >https://www.google.com/recaptcha/admin/create

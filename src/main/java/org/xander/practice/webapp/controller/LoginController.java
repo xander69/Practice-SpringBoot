@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,12 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xander.practice.webapp.entity.User;
+import org.xander.practice.webapp.exception.InvalidCaptchaException;
 import org.xander.practice.webapp.exception.UserAlreadyExistsException;
 import org.xander.practice.webapp.security.AuthFailureHandler;
+import org.xander.practice.webapp.service.CaptchaService;
 import org.xander.practice.webapp.service.UserService;
 import org.xander.practice.webapp.util.ValidationHelper;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,12 +32,18 @@ public class LoginController {
 
     private final UserService userService;
     private final AuthFailureHandler authFailureHandler;
+    private final CaptchaService captchaService;
+    private final boolean recaptchaUse;
 
     @Autowired
     public LoginController(UserService userService,
-                           AuthFailureHandler authFailureHandler) {
+                           AuthFailureHandler authFailureHandler,
+                           CaptchaService captchaService,
+                           @Value("${recaptcha.use:false}") boolean recaptchaUse) {
         this.userService = userService;
         this.authFailureHandler = authFailureHandler;
+        this.captchaService = captchaService;
+        this.recaptchaUse = recaptchaUse;
     }
 
     @GetMapping("/login")
@@ -52,19 +62,30 @@ public class LoginController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model) {
+        model.addAttribute("recaptchaUse", recaptchaUse);
         return "register";
     }
 
     @PostMapping("/register")
     public String addUser(@Valid User user,
                           BindingResult bindingResult,
+                          @RequestParam("g-recaptcha-response") String captchaResponse,
                           Model model) {
+        Map<String, String> errorsMap = new HashMap<>();
         if (!Objects.equals(user.getPassword(), user.getPassword2())) {
-            model.addAttribute("password2Error", "Passwords are different!");
+            errorsMap.put("password2Error", "Passwords are different!");
+        }
+        try {
+            captchaService.checkCaptcha(captchaResponse);
+        } catch (InvalidCaptchaException e) {
+            errorsMap.put("captchaError", e.getMessage());
         }
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationHelper.getErrorsMap(bindingResult);
+            errorsMap.putAll(ValidationHelper.getErrorsMap(bindingResult));
+        }
+        if (!errorsMap.isEmpty()) {
+            model.addAttribute("recaptchaUse", recaptchaUse);
             model.mergeAttributes(errorsMap);
             return "register";
         }
@@ -72,6 +93,7 @@ public class LoginController {
             User newUser = userService.createUser(user);
             log.info("Created user with id=[{}]", newUser.getId());
         } catch (UserAlreadyExistsException e) {
+            model.addAttribute("recaptchaUse", recaptchaUse);
             model.addAttribute("usernameError", e.getMessage());
             return "/register";
         }
