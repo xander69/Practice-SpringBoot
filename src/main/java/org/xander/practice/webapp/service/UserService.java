@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.xander.practice.webapp.entity.Role;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.exception.RegistrationException;
+import org.xander.practice.webapp.exception.UserAlreadyExistsException;
 import org.xander.practice.webapp.repository.UserRepository;
 
 import java.util.Collections;
@@ -54,20 +54,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
     }
 
-    public User createUser(String username, String password, String email) {
-        if (StringUtils.isBlank(username)) {
-            throw new RegistrationException("Username must not be empty");
+    public User createUser(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UserAlreadyExistsException(user.getUsername());
         }
-        if (StringUtils.isBlank(password)) {
-            throw new RegistrationException("Password must not be empty");
-        }
-        if (userRepository.existsByUsername(username)) {
-            throw new RegistrationException(String.format("User with name '%s' already exists", username));
-        }
-        User user = new User();
-        user.setUsername(username);
+        user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEmail(email);
+        user.setEmail(user.getEmail());
         user.setActive(Boolean.FALSE);
         user.setActivationCode(UUID.randomUUID().toString());
         user.setCreateDateTime(new Date());

@@ -6,15 +6,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xander.practice.webapp.entity.User;
-import org.xander.practice.webapp.exception.RegistrationException;
+import org.xander.practice.webapp.exception.UserAlreadyExistsException;
 import org.xander.practice.webapp.security.AuthFailureHandler;
 import org.xander.practice.webapp.service.UserService;
+import org.xander.practice.webapp.util.ValidationHelper;
 
+import javax.validation.Valid;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -36,11 +40,13 @@ public class LoginController {
     public String loginPage(@RequestParam(value = "logout", required = false) String logout,
                             Model model) {
         if (Objects.nonNull(authFailureHandler.getAuthException())) {
-            model.addAttribute("errorMessage", authFailureHandler.getAuthException().getMessage());
+            model.addAttribute("loginMessageType", "danger");
+            model.addAttribute("loginMessage", authFailureHandler.getAuthException().getMessage());
             authFailureHandler.setAuthException(null);
         }
         if (StringUtils.isNotBlank(logout)) {
-            model.addAttribute("successMessage", "You have been successfully logged out!");
+            model.addAttribute("loginMessageType", "success");
+            model.addAttribute("loginMessage", "You have been successfully logged out!");
         }
         return "login";
     }
@@ -51,12 +57,22 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String addUser(User user, Model model) {
+    public String addUser(@Valid User user,
+                          BindingResult bindingResult,
+                          Model model) {
+        if (!Objects.equals(user.getPassword(), user.getPassword2())) {
+            model.addAttribute("password2Error", "Passwords are different!");
+        }
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationHelper.getErrorsMap(bindingResult);
+            model.mergeAttributes(errorsMap);
+            return "register";
+        }
         try {
-            User newUser = userService.createUser(user.getUsername(), user.getPassword(), user.getEmail());
+            User newUser = userService.createUser(user);
             log.info("Created user with id=[{}]", newUser.getId());
-        } catch (RegistrationException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+        } catch (UserAlreadyExistsException e) {
+            model.addAttribute("usernameError", e.getMessage());
             return "/register";
         }
         return "redirect:/login";
@@ -66,9 +82,11 @@ public class LoginController {
     public String activate(Model model, @PathVariable String code) {
         boolean isActivated = userService.activateUser(code);
         if (isActivated) {
-            model.addAttribute("successMessage", "User successfully activated! Try Sign In...");
+            model.addAttribute("loginMessageType", "success");
+            model.addAttribute("loginMessage", "User successfully activated! Try Sign In...");
         } else {
-            model.addAttribute("errorMessage", "Activation code is not found!");
+            model.addAttribute("loginMessageType", "danger");
+            model.addAttribute("loginMessage", "Activation code is not found!");
         }
         return "login";
     }

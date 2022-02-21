@@ -2,11 +2,6 @@
 
 <@c.page "Profile">
 <h1 class="mb-3">${username}</h1>
-<#if errorMessage??>
-    <div class="invalid-feedback d-block mb-3">
-        ${errorMessage}
-    </div>
-</#if>
 <form method="post">
     <div class="form-group row">
         <label class="col-sm-2 col-form-lavel" for="loginPassword">Password:</label>

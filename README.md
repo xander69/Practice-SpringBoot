@@ -9,6 +9,7 @@
 * Spring MVC
 * Spring Security
 * Spring Mail
+* Spring DevTools
 * Spring Test
 * Template Engines: thymeleaf, mustache, freemarker
 * Bootstrap 5
