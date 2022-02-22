@@ -138,3 +138,7 @@
 19. Spring Boot: постраничное отображение длинных списков (pagination)
 
     https://www.youtube.com/watch?v=Sc3EQBy0tuk
+
+20. Spring Boot: модульное тестирование и подмена (mock object)
+
+    https://www.youtube.com/watch?v=QrSR1fm9JwA
