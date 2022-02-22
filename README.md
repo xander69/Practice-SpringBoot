@@ -125,3 +125,12 @@
 17. Java Tools: Project Lombok - пишем меньше кода
 
     https://www.youtube.com/watch?v=QmsMWCIf3nc
+
+18. Spring Boot: интеграционное тестирование с Spring Testing
+
+    https://www.youtube.com/watch?v=Lnc3o8cCwZY
+    
+    Создать пустую БД перед выполнением тестов:
+    ```postgresql
+    create database test;
+    ```

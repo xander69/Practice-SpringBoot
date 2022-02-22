@@ -16,44 +16,46 @@
     </form>
 </div>
 
+<div id="scenarioList">
 <#list scenarios as scenario>
-<div class="card my-3">
-    <div class="m-2">
-        <#if scenario.iconFilename??>
-            <img src="/img/${scenario.iconFilename}"
-                 class="rounded float-left mr-3"
-                 style="width: 50px; height: 50px;"
-                 alt="${scenario.iconFilename}"/>
-        </#if>
-        <b>${scenario.name}</b><br/>
-        <i>${scenario.description}</i>
-    </div>
-    <div class="card-footer text-muted">
-        <div class="row">
-            <div class="col-1">
-                ID: ${scenario.id}
-            </div>
-            <div class="col-3">
-                <#if scenario.createDateTime??> Created: ${scenario.createDateTime?datetime}</#if>
-            </div>
-            <div class="col-3">
-                <#if scenario.changeDateTime??> Changed: ${scenario.changeDateTime?datetime}</#if>
-            </div>
-            <div class="col-3">
-                <#if scenario.creator??>
-                Created by <strong><a href="/user-scenarios/${scenario.creator.id}">${scenario.creator.username}</a></strong>
-                </#if>
-            </div>
-            <div class="col-2 text-end">
-                <#if scenario.creator.id == authId>
-                <a href="/user-scenarios/${scenario.creator.id}?scenario=${scenario.id}">Edit</a>
-                </#if>
+    <div class="card my-3" data-id="${scenario.id}">
+        <div class="m-2">
+            <#if scenario.iconFilename??>
+                <img src="/img/${scenario.iconFilename}"
+                     class="rounded float-left mr-3"
+                     style="width: 50px; height: 50px;"
+                     alt="${scenario.iconFilename}"/>
+            </#if>
+            <b>${scenario.name}</b><br/>
+            <i>${scenario.description}</i>
+        </div>
+        <div class="card-footer text-muted">
+            <div class="row">
+                <div class="col-1">
+                    ID: ${scenario.id}
+                </div>
+                <div class="col-3">
+                    <#if scenario.createDateTime??> Created: ${scenario.createDateTime?datetime}</#if>
+                </div>
+                <div class="col-3">
+                    <#if scenario.changeDateTime??> Changed: ${scenario.changeDateTime?datetime}</#if>
+                </div>
+                <div class="col-3">
+                    <#if scenario.creator??>
+                    Created by <strong><a href="/user-scenarios/${scenario.creator.id}">${scenario.creator.username}</a></strong>
+                    </#if>
+                </div>
+                <div class="col-2 text-end">
+                    <#if scenario.creator.id == authId>
+                    <a href="/user-scenarios/${scenario.creator.id}?scenario=${scenario.id}">Edit</a>
+                    </#if>
+                </div>
             </div>
         </div>
     </div>
-</div>
 <#else>
-<div>
-    No scenarios
-</div>
+    <div>
+        No scenarios
+    </div>
 </#list>
+</div>

@@ -1,7 +1,7 @@
 <#import "loginPart.ftl" as l>
 <#include "securityPart.ftl">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav id="navbarContent" class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Web Application</a>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
