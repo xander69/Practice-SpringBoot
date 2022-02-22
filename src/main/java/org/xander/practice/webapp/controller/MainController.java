@@ -47,7 +47,7 @@ public class MainController {
     public String main(
             @RequestParam(required = false, defaultValue = "") String filter,
             Model model,
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
         final Page<Scenario> scenarioPage;
         if (StringUtils.isBlank(filter)) {
             scenarioPage = scenarioService.getAllScenarios(pageable);
@@ -66,7 +66,7 @@ public class MainController {
                               BindingResult bindingResult,
                               Model model,
                               @RequestParam("icon") MultipartFile file,
-                              @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+                              @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationHelper.getErrorsMap(bindingResult);
             model.mergeAttributes(errorsMap);
@@ -105,7 +105,7 @@ public class MainController {
             @PathVariable User user,
             @RequestParam(value = "scenario", required = false) Scenario scenario,
             Model model,
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Scenario> scenarioPage;
         if (StringUtils.isBlank(filter)) {
             scenarioPage = scenarioService.getScenariosByCreator(user, pageable);
