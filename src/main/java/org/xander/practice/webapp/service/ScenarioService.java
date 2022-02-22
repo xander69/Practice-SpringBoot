@@ -2,6 +2,8 @@ package org.xander.practice.webapp.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xander.practice.webapp.entity.Scenario;
@@ -30,8 +32,12 @@ public class ScenarioService {
         return scenarioRepository.findAll();
     }
 
-    public List<Scenario> filterScenarios(String name) {
-        return scenarioRepository.findByNameContainingIgnoreCase(name);
+    public Page<Scenario> getAllScenarios(Pageable pageable) {
+        return scenarioRepository.findAll(pageable);
+    }
+
+    public Page<Scenario> filterScenarios(String name, Pageable pageable) {
+        return scenarioRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 
     public Scenario createScenario(Scenario scenario, MultipartFile file, User user)  {
@@ -65,5 +71,13 @@ public class ScenarioService {
             return iconFile.toFile().getName();
         }
         return null;
+    }
+
+    public Page<Scenario> getScenariosByCreator(User user, Pageable pageable) {
+        return scenarioRepository.findByCreator(user, pageable);
+    }
+
+    public Page<Scenario> filterScenariosByCreator(User user, String filter, Pageable pageable) {
+        return scenarioRepository.findByCreatorAndNameContainingIgnoreCase(user, filter, pageable);
     }
 }

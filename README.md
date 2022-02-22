@@ -134,3 +134,7 @@
     ```postgresql
     create database test;
     ```
+
+19. Spring Boot: постраничное отображение длинных списков (pagination)
+
+    https://www.youtube.com/watch?v=Sc3EQBy0tuk

@@ -1,7 +1,8 @@
 <#include "securityPart.ftl">
+<#import "paginationPart.ftl" as p>
 
 <div class="mt-3">
-    <form action="/" method="get" class="form-inline">
+    <form action="${urlPage}" method="get" class="form-inline">
         <div class="row">
             <div class="col">
                 <input type="text" name="filter" value="${filter!}"
@@ -16,8 +17,10 @@
     </form>
 </div>
 
+<@p.scenarioPager urlPage scenarioPage/>
+
 <div id="scenarioList">
-<#list scenarios as scenario>
+<#list scenarioPage.content as scenario>
     <div class="card my-3" data-id="${scenario.id}">
         <div class="m-2">
             <#if scenario.iconFilename??>
@@ -59,3 +62,5 @@
     </div>
 </#list>
 </div>
+
+<@p.scenarioPager urlPage scenarioPage/>

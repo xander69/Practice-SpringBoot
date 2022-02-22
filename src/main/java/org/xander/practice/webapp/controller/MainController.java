@@ -5,6 +5,10 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +28,8 @@ import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 
 @Slf4j
@@ -44,15 +46,17 @@ public class MainController {
     @GetMapping("/")
     public String main(
             @RequestParam(required = false, defaultValue = "") String filter,
-            Model model) {
-        final List<Scenario> scenarios;
+            Model model,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        final Page<Scenario> scenarioPage;
         if (StringUtils.isBlank(filter)) {
-            scenarios = scenarioService.getAllScenarios();
+            scenarioPage = scenarioService.getAllScenarios(pageable);
         } else {
-            scenarios = scenarioService.filterScenarios(filter);
+            scenarioPage = scenarioService.filterScenarios(filter, pageable);
         }
         model.addAttribute("filter", filter);
-        model.addAttribute("scenarios", scenarios);
+        model.addAttribute("urlPage", "/");
+        model.addAttribute("scenarioPage", scenarioPage);
         return "main";
     }
 
@@ -61,7 +65,8 @@ public class MainController {
                               @Valid Scenario scenario,
                               BindingResult bindingResult,
                               Model model,
-                              @RequestParam("icon") MultipartFile file) {
+                              @RequestParam("icon") MultipartFile file,
+                              @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationHelper.getErrorsMap(bindingResult);
             model.mergeAttributes(errorsMap);
@@ -71,8 +76,9 @@ public class MainController {
             log.info("Created scenario with id=[{}]", savedScenario.getId());
             model.addAttribute("scenario", null);
         }
-        val scenarios = scenarioService.getAllScenarios();
-        model.addAttribute("scenarios", scenarios);
+        val scenarios = scenarioService.getAllScenarios(pageable);
+        model.addAttribute("urlPage", "/");
+        model.addAttribute("scenarioPage", scenarios);
         return "main";
     }
 
@@ -94,16 +100,24 @@ public class MainController {
 
     @GetMapping("/user-scenarios/{user}")
     public String userChannel(
+            @RequestParam(required = false, defaultValue = "") String filter,
             @AuthenticationPrincipal User currentUser,
             @PathVariable User user,
             @RequestParam(value = "scenario", required = false) Scenario scenario,
-            Model model
-    ) {
-        Set<Scenario> scenarios = user.getScenarios();
+            Model model,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Scenario> scenarioPage;
+        if (StringUtils.isBlank(filter)) {
+            scenarioPage = scenarioService.getScenariosByCreator(user, pageable);
+        } else {
+            scenarioPage = scenarioService.filterScenariosByCreator(user, filter, pageable);
+        }
+        model.addAttribute("filter", filter);
         model.addAttribute("userChannel", user);
         model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
         model.addAttribute("subscribersCount", user.getSubscribers().size());
-        model.addAttribute("scenarios", scenarios);
+        model.addAttribute("urlPage", "/user-scenarios/" + user.getId());
+        model.addAttribute("scenarioPage", scenarioPage);
         model.addAttribute("scenario", scenario);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
         model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
