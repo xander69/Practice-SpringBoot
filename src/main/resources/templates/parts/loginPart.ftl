@@ -11,8 +11,8 @@
         ${loginMessage}
     </div>
 </#if>
-<form action="${action}" method="post">
-    <div class="form-group row">
+<form action="${action}" method="post" class="my-3">
+    <div class="form-group row mt-3">
         <label class="col-sm-2 col-form-lavel" for="loginUsername">User Name:</label>
         <div class="col-sm-6">
             <input type="text" name="username"
@@ -25,7 +25,7 @@
             </#if>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="form-group row mt-3">
         <label class="col-sm-2 col-form-lavel" for="loginPassword">Password:</label>
         <div class="col-sm-6">
             <input type="password" name="password"
@@ -39,7 +39,7 @@
         </div>
     </div>
     <#if isRegisterForm>
-    <div class="form-group row">
+    <div class="form-group row mt-3">
         <label class="col-sm-2 col-form-lavel" for="loginPassword2">Confirm password:</label>
         <div class="col-sm-6">
             <input type="password" name="password2"
@@ -52,7 +52,7 @@
             </#if>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="form-group row mt-3">
         <label class="col-sm-2 col-form-lavel" for="loginEmail">E-Mail:</label>
         <div class="col-sm-6">
             <input type="email" name="email"
@@ -66,7 +66,7 @@
         </div>
     </div>
     <#if recaptchaUse>
-    <div class="col-sm-6 mb-3">
+    <div class="col-sm-6 mb-3 mt-3">
         <div class="g-recaptcha" data-sitekey="6LcRHcQUAAAAAIMnBhgkcuPc8zNj7GelQR_ReSz9"></div>
         <#if captchaError??>
         <div class="alert alert-danger" role="alert">${captchaError}</div>
@@ -75,11 +75,14 @@
     </#if>
     </#if>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    <div>
+    <div mt-3>
     <#if isRegisterForm>
         <button class="btn btn-primary" type="submit">Register</button>
     <#else>
-        <button class="btn btn-primary" type="submit">Sign In</button>
+        <button class="btn btn-primary" type="submit">
+            Sign In
+            <i class="fas fa-sign-in"></i>
+        </button>
         <div class="mt-3">
             <a href="/register">Sign Up</a>
         </div>
@@ -91,7 +94,9 @@
 <#macro logout>
 <form class="d-flex" action="/logout" method="post">
     <div class="navbar-text" style="width: 150px;">Welcome, ${authName}!</div>
-    <button class="btn btn-primary" type="submit">Sign Out</button>
+    <button class="btn btn-primary" type="submit">
+        <i class="fas fa-sign-out"></i> Sign Out
+    </button>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
 </#macro>

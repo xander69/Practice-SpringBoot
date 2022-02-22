@@ -17,6 +17,7 @@
 * FlyWay
 * Recaptcha
 * Lombok
+* Font Awesome
 
 ### References
 

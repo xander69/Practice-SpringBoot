@@ -10,7 +10,10 @@
                        placeholder="Search by name"/>
             </div>
             <div class="col">
-                <button type="submit" class="btn btn-primary c">Search</button>
+                <button type="submit" class="btn btn-primary c">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
             </div>
         </div>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -50,6 +53,7 @@
                 </div>
                 <div class="col-2 text-end">
                     <#if scenario.creator.id == authId>
+                    <i class="fa-solid fa-pen-to-square"></i>
                     <a href="/user-scenarios/${scenario.creator.id}?scenario=${scenario.id}">Edit</a>
                     </#if>
                 </div>

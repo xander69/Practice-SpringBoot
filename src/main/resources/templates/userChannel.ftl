@@ -7,9 +7,13 @@
 <h1 class="mb-3">Channel of '${userChannel.username}'</h1>
 <#if !isCurrentUser>
     <#if isSubscriber>
-    <a class="btn btn-secondary" href="/user/unsubscribe/${userChannel.id}">Unsubscribe</a>
+    <a class="btn btn-secondary" href="/user/unsubscribe/${userChannel.id}">
+        Unsubscribe <i class="fas fa-minus-circle"></i>
+    </a>
     <#else>
-    <a class="btn btn-primary" href="/user/subscribe/${userChannel.id}">Subscribe</a>
+    <a class="btn btn-primary" href="/user/subscribe/${userChannel.id}">
+        Subscribe <i class="fas fa-plus-circle"></i>
+    </a>
     </#if>
 </#if>
 
@@ -20,6 +24,7 @@
                 <div class="card-body">
                     <div class="card-title">Subscriptions</div>
                     <div class="card-text">
+                        <i class="fas fa-user"></i>
                         <a href="/user/subscriptions/${userChannel.id}/list">${subscriptionsCount}</a>
                     </div>
                 </div>
@@ -30,6 +35,7 @@
                 <div class="card-body">
                     <div class="card-title">Subscriber</div>
                     <div class="card-text">
+                        <i class="far fa-user"></i>
                         <a href="/user/subscribers/${userChannel.id}/list">${subscribersCount}</a>
                     </div>
                 </div>

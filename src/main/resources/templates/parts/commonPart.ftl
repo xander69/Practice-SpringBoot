@@ -20,6 +20,8 @@
             integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
             crossorigin="anonymous"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="https://kit.fontawesome.com/32043e9b0d.js"
+            crossorigin="anonymous"></script>
     <link rel="icon" href="/static/favicon.ico" type="image/ico"/>
 </head>
 <body>

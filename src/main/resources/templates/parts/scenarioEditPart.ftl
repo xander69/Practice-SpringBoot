@@ -23,7 +23,9 @@
             <input type="file" name="icon" class="custom-file-input" id="customFile"/>
         </div>
         <div class="col">
-            <button type="submit" class="btn btn-primary">${buttonTitle}</button>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> ${buttonTitle}
+            </button>
         </div>
     </div>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

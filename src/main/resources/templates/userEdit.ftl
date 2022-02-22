@@ -2,9 +2,9 @@
 
 <@c.page "User Edit">
 <h1 class="mb-3">Edit user '${user.username}'</h1>
-<div class="form-group mt-3">
+<div class="form-group my-3">
     <form action="/user" method="post">
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <div class="col-sm-2">
                 ID:
             </div>
@@ -12,7 +12,7 @@
                 ${user.id}
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <label class="col-sm-2 col-form-lavel" for="editUsername">Username:</label>
             <div class="col-sm-6">
                 <input type="text" name="username"
@@ -20,14 +20,14 @@
                        class="form-control" id="editUsername"/>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <label class="col-sm-2 col-form-lavel" for="editPassword">Password:</label>
             <div class="col-sm-6">
                 <input type="password" name="password" value=""
                        class="form-control" id="editPassword"/>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <label class="col-sm-2 col-form-lavel" for="editEmail">Email:</label>
             <div class="col-sm-6">
                 <input type="text" name="email"
@@ -36,12 +36,12 @@
             </div>
         </div>
         <#if user.activationCode??>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <div class="col-sm-2 col-form-lavel">Activation code:</div>
             <div class="col-sm-6">${user.activationCode}</div>
         </div>
         </#if>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <label class="col-sm-2 col-form-lavel" for="switch-active">Active:</label>
             <div class="col-sm-6">
                 <div class="form-check form-switch">
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mb-3">
             <label class="col-sm-2 col-form-lavel">Roles:</label>
             <div class="col-sm-6">
                 <#list roles as role>
