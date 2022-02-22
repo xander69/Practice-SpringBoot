@@ -1,9 +1,9 @@
 package org.xander.practice.webapp.service;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.xander.practice.webapp.exception.InternalServerException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,19 +19,16 @@ public class UploadService {
         this.uploadPath = uploadPath;
     }
 
+    @SneakyThrows
     public Path saveIconToFile(MultipartFile file) {
-        try {
-            Path uploadDir = Paths.get(uploadPath);
-            if (!Files.exists(uploadDir)) {
-                Files.createDirectories(uploadDir);
-            }
-            String iconFilename = UUID.randomUUID().toString() + '_' + file.getOriginalFilename();
-            Path iconFile = Paths.get(uploadPath, iconFilename);
-            file.transferTo(iconFile);
-            return iconFile;
-        } catch (Exception e) {
-            throw new InternalServerException(e.getMessage(), e);
+        Path uploadDir = Paths.get(uploadPath);
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
         }
+        String iconFilename = UUID.randomUUID().toString() + '_' + file.getOriginalFilename();
+        Path iconFile = Paths.get(uploadPath, iconFilename);
+        file.transferTo(iconFile);
+        return iconFile;
     }
 
 }

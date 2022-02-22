@@ -1,5 +1,11 @@
 package org.xander.practice.webapp.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
@@ -20,6 +26,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "SCENARIO")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class Scenario {
 
     @Id
@@ -28,80 +39,29 @@ public class Scenario {
     @Column(name = "ID")
     private Long id;
     @Column(name = "NAME")
+    @NonNull
     @NotBlank(message = "Fill the scenario name")
     @Length(max = 255, message = "Scenario name to long (max 255 symbols)")
     private String name;
     @Column(name = "DESCR")
+    @NonNull
     @NotBlank(message = "Fill the scenario description")
     @Length(max = 2000, message = "Scenario description to long (max 2000 symbols)")
     private String description;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DT")
+    @NonNull
     private Date createDateTime;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CHANGE_DT")
+    @NonNull
     private Date changeDateTime;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
+    @NonNull
     private User creator;
     @Column(name = "ICON_FILENAME")
     private String iconFilename;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public void setCreateDateTime(Date createDateTime) {
-        this.createDateTime = createDateTime;
-    }
-
-    public Date getChangeDateTime() {
-        return changeDateTime;
-    }
-
-    public void setChangeDateTime(Date changeDateTime) {
-        this.changeDateTime = changeDateTime;
-    }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
-    public String getIconFilename() {
-        return iconFilename;
-    }
-
-    public void setIconFilename(String iconFilename) {
-        this.iconFilename = iconFilename;
-    }
 
     @Override
     public String toString() {

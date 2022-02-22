@@ -1,7 +1,6 @@
 package org.xander.practice.webapp.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,10 +22,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 
+@Slf4j
 @SuppressWarnings("NullableProblems")
 public class DummyMailSender implements JavaMailSender {
-
-    private static final Logger log = LoggerFactory.getLogger(DummyMailSender.class);
 
     private final DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS")

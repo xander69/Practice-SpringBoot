@@ -1,9 +1,9 @@
 package org.xander.practice.webapp.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -30,10 +30,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+@Slf4j
 @Controller
 public class MainController {
-
-    private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     private final ScenarioService scenarioService;
 
@@ -72,7 +71,8 @@ public class MainController {
             log.info("Created scenario with id=[{}]", savedScenario.getId());
             model.addAttribute("scenario", null);
         }
-        model.addAttribute("scenarios", scenarioService.getAllScenarios());
+        val scenarios = scenarioService.getAllScenarios();
+        model.addAttribute("scenarios", scenarios);
         return "main";
     }
 

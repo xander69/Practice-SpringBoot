@@ -16,6 +16,7 @@
 * Bootstrap 5
 * FlyWay
 * Recaptcha
+* Lombok
 
 ### References
 
@@ -120,3 +121,7 @@
 16. Spring Boot: JPA ManyToMany - подписки и подписчики
 
     https://www.youtube.com/watch?v=JpF0MwdJzO4
+
+17. Java Tools: Project Lombok - пишем меньше кода
+
+    https://www.youtube.com/watch?v=QmsMWCIf3nc
