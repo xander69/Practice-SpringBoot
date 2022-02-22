@@ -18,6 +18,7 @@
 * Recaptcha
 * Lombok
 * Font Awesome
+* Turbolinks
 
 ### References
 
@@ -147,3 +148,7 @@
 21. Spring Boot: добавляем "лайки", используем HQL (JPQL)
 
     https://www.youtube.com/watch?v=QhMBtnS6SrI
+
+22. Spring Boot + Turbolinks: ускоряем отображение страниц
+
+    https://www.youtube.com/watch?v=d3bdWj_4lEE
