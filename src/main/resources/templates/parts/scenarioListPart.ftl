@@ -51,7 +51,17 @@
                     Created by <strong><a href="/user-scenarios/${scenario.creator.id}">${scenario.creator.username}</a></strong>
                     </#if>
                 </div>
-                <div class="col-2 text-end">
+                <div class="col-1 text-center">
+                    <a href="/scenarios/${scenario.id}/like">
+                    <#if scenario.meLiked>
+                        <i class="fas fa-heart"></i>
+                    <#else>
+                        <i class="far fa-heart"></i>
+                    </#if>
+                    ${scenario.likes}
+                    </a>
+                </div>
+                <div class="col-1 text-end">
                     <#if scenario.creator.id == authId>
                     <i class="fa-solid fa-pen-to-square"></i>
                     <a href="/user-scenarios/${scenario.creator.id}?scenario=${scenario.id}">Edit</a>

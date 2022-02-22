@@ -16,10 +16,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.xander.practice.webapp.entity.Scenario;
 import org.xander.practice.webapp.entity.User;
+import org.xander.practice.webapp.model.ScenarioModel;
 import org.xander.practice.webapp.service.ScenarioService;
 import org.xander.practice.webapp.util.ValidationHelper;
 
@@ -45,14 +50,15 @@ public class MainController {
 
     @GetMapping("/")
     public String main(
+            @AuthenticationPrincipal User currentUser,
             @RequestParam(required = false, defaultValue = "") String filter,
             Model model,
             @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
-        final Page<Scenario> scenarioPage;
+        final Page<ScenarioModel> scenarioPage;
         if (StringUtils.isBlank(filter)) {
-            scenarioPage = scenarioService.getAllScenarios(pageable);
+            scenarioPage = scenarioService.getAllScenarios(currentUser, pageable);
         } else {
-            scenarioPage = scenarioService.filterScenarios(filter, pageable);
+            scenarioPage = scenarioService.filterScenarios(filter, currentUser, pageable);
         }
         model.addAttribute("filter", filter);
         model.addAttribute("urlPage", "/");
@@ -61,22 +67,23 @@ public class MainController {
     }
 
     @PostMapping("/")
-    public String addScenario(@AuthenticationPrincipal User user,
-                              @Valid Scenario scenario,
-                              BindingResult bindingResult,
-                              Model model,
-                              @RequestParam("icon") MultipartFile file,
-                              @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
+    public String addScenario(
+            @AuthenticationPrincipal User currentUser,
+            @Valid Scenario scenario,
+            BindingResult bindingResult,
+            Model model,
+            @RequestParam("icon") MultipartFile file,
+            @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationHelper.getErrorsMap(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("scenario", scenario);
         } else {
-            Scenario savedScenario = scenarioService.createScenario(scenario, file, user);
+            Scenario savedScenario = scenarioService.createScenario(scenario, file, currentUser);
             log.info("Created scenario with id=[{}]", savedScenario.getId());
             model.addAttribute("scenario", null);
         }
-        val scenarios = scenarioService.getAllScenarios(pageable);
+        val scenarios = scenarioService.getAllScenarios(currentUser, pageable);
         model.addAttribute("urlPage", "/");
         model.addAttribute("scenarioPage", scenarios);
         return "main";
@@ -98,34 +105,34 @@ public class MainController {
         return "sysinfo";
     }
 
-    @GetMapping("/user-scenarios/{user}")
+    @GetMapping("/user-scenarios/{creator}")
     public String userChannel(
             @RequestParam(required = false, defaultValue = "") String filter,
             @AuthenticationPrincipal User currentUser,
-            @PathVariable User user,
+            @PathVariable User creator,
             @RequestParam(value = "scenario", required = false) Scenario scenario,
             Model model,
             @PageableDefault(sort = {"id"}, size = 5, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Scenario> scenarioPage;
+        Page<ScenarioModel> scenarioPage;
         if (StringUtils.isBlank(filter)) {
-            scenarioPage = scenarioService.getScenariosByCreator(user, pageable);
+            scenarioPage = scenarioService.getScenariosByCreator(creator, currentUser, pageable);
         } else {
-            scenarioPage = scenarioService.filterScenariosByCreator(user, filter, pageable);
+            scenarioPage = scenarioService.filterScenariosByCreator(filter, creator, currentUser, pageable);
         }
         model.addAttribute("filter", filter);
-        model.addAttribute("userChannel", user);
-        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
-        model.addAttribute("subscribersCount", user.getSubscribers().size());
-        model.addAttribute("urlPage", "/user-scenarios/" + user.getId());
+        model.addAttribute("userChannel", creator);
+        model.addAttribute("subscriptionsCount", creator.getSubscriptions().size());
+        model.addAttribute("subscribersCount", creator.getSubscribers().size());
+        model.addAttribute("urlPage", "/user-scenarios/" + creator.getId());
         model.addAttribute("scenarioPage", scenarioPage);
         model.addAttribute("scenario", scenario);
-        model.addAttribute("isCurrentUser", currentUser.equals(user));
-        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        model.addAttribute("isCurrentUser", currentUser.equals(creator));
+        model.addAttribute("isSubscriber", creator.getSubscribers().contains(currentUser));
         return "userChannel";
     }
 
     @PostMapping("/user-scenarios/{userId}")
-    public String updateMessage(
+    public String updateScenario(
             @PathVariable Long userId,
             @RequestParam(value = "id") Scenario scenario,
             @RequestParam("name") String name,
@@ -133,5 +140,17 @@ public class MainController {
             @RequestParam("icon") MultipartFile file) {
         scenarioService.updateScenario(scenario, name, description, file, userId);
         return "redirect:/user-scenarios/" + userId;
+    }
+
+    @GetMapping("/scenarios/{scenario}/like")
+    public String likeScenario(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable Scenario scenario,
+            RedirectAttributes redirectAttributes,
+            @RequestHeader(required = false) String referer) {
+        scenarioService.likeDislikeScenario(scenario, currentUser);
+        UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
+        components.getQueryParams().forEach(redirectAttributes::addAttribute);
+        return "redirect:" + components.getPath();
     }
 }

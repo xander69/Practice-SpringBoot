@@ -143,3 +143,7 @@
 20. Spring Boot: модульное тестирование и подмена (mock object)
 
     https://www.youtube.com/watch?v=QrSR1fm9JwA
+
+21. Spring Boot: добавляем "лайки", используем HQL (JPQL)
+
+    https://www.youtube.com/watch?v=QhMBtnS6SrI

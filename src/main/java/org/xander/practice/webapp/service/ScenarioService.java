@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xander.practice.webapp.entity.Scenario;
 import org.xander.practice.webapp.entity.User;
+import org.xander.practice.webapp.model.ScenarioModel;
 import org.xander.practice.webapp.repository.ScenarioRepository;
 
 import java.nio.file.Path;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class ScenarioService {
@@ -28,16 +29,12 @@ public class ScenarioService {
         this.uploadService = uploadService;
     }
 
-    public List<Scenario> getAllScenarios() {
-        return scenarioRepository.findAll();
+    public Page<ScenarioModel> getAllScenarios(User user, Pageable pageable) {
+        return scenarioRepository.findAll(user, pageable);
     }
 
-    public Page<Scenario> getAllScenarios(Pageable pageable) {
-        return scenarioRepository.findAll(pageable);
-    }
-
-    public Page<Scenario> filterScenarios(String name, Pageable pageable) {
-        return scenarioRepository.findByNameContainingIgnoreCase(name, pageable);
+    public Page<ScenarioModel> filterScenarios(String name, User user, Pageable pageable) {
+        return scenarioRepository.findByNameContainingIgnoreCase(name, user, pageable);
     }
 
     public Scenario createScenario(Scenario scenario, MultipartFile file, User user)  {
@@ -73,11 +70,20 @@ public class ScenarioService {
         return null;
     }
 
-    public Page<Scenario> getScenariosByCreator(User user, Pageable pageable) {
-        return scenarioRepository.findByCreator(user, pageable);
+    public Page<ScenarioModel> getScenariosByCreator(User creator, User user, Pageable pageable) {
+        return scenarioRepository.findByCreator(creator, user, pageable);
     }
 
-    public Page<Scenario> filterScenariosByCreator(User user, String filter, Pageable pageable) {
-        return scenarioRepository.findByCreatorAndNameContainingIgnoreCase(user, filter, pageable);
+    public Page<ScenarioModel> filterScenariosByCreator(String filter, User creator, User user, Pageable pageable) {
+        return scenarioRepository.findByCreatorAndNameContainingIgnoreCase(filter, creator, user, pageable);
+    }
+
+    public void likeDislikeScenario(Scenario scenario, User user) {
+        Set<User> likes = scenario.getLikes();
+        if (likes.contains(user)) {
+            likes.remove(user);
+        } else {
+            likes.add(user);
+        }
     }
 }
