@@ -1,5 +1,21 @@
 <#include "securityPart.ftl">
 
+<div class="mt-3">
+    <form action="/" method="get" class="form-inline">
+        <div class="row">
+            <div class="col">
+                <input type="text" name="filter" value="${filter!}"
+                       class="form-control"
+                       placeholder="Search by name"/>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary c">Search</button>
+            </div>
+        </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+</div>
+
 <#list scenarios as scenario>
 <div class="card my-3">
     <div class="m-2">
@@ -12,19 +28,23 @@
         <b>${scenario.name}</b><br/>
         <i>${scenario.description}</i>
     </div>
-    <div class="card-footer text-muted" style="font-size:0.7rem;">
+    <div class="card-footer text-muted">
         <div class="row">
-            <div class="col">
+            <div class="col-1">
                 ID: ${scenario.id}
             </div>
-            <div class="col">
+            <div class="col-3">
                 <#if scenario.createDateTime??> Created: ${scenario.createDateTime?datetime}</#if>
             </div>
-            <div class="col">
+            <div class="col-3">
                 <#if scenario.changeDateTime??> Changed: ${scenario.changeDateTime?datetime}</#if>
             </div>
-            <div class="col">
-                <#if scenario.creator??> Created by ${scenario.creator.username}</#if>
+            <div class="col-3">
+                <#if scenario.creator??>
+                Created by <strong><a href="/user-scenarios/${scenario.creator.id}">${scenario.creator.username}</a></strong>
+                </#if>
+            </div>
+            <div class="col-2 text-end">
                 <#if scenario.creator.id == authId>
                 <a href="/user-scenarios/${scenario.creator.id}?scenario=${scenario.id}">Edit</a>
                 </#if>

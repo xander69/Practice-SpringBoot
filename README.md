@@ -15,6 +15,7 @@
 * Template Engines: thymeleaf, mustache, freemarker
 * Bootstrap 5
 * FlyWay
+* Recaptcha
 
 ### References
 
@@ -115,3 +116,7 @@
 15. Spring Boot: JPA oneToMany - сообщения пользователя, редактор сообщений
 
     https://www.youtube.com/watch?v=-gdDklUu03k    
+
+16. Spring Boot: JPA ManyToMany - подписки и подписчики
+
+    https://www.youtube.com/watch?v=JpF0MwdJzO4

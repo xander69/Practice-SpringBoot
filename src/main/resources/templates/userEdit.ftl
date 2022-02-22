@@ -23,8 +23,7 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-lavel" for="editPassword">Password:</label>
             <div class="col-sm-6">
-                <input type="password" name="password"
-                       value="${user.password}"
+                <input type="password" name="password" value=""
                        class="form-control" id="editPassword"/>
             </div>
         </div>

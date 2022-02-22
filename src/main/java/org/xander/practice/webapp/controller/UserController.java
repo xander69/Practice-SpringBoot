@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,5 +75,36 @@ public class UserController {
             @RequestParam String email) {
         userService.updateProfile(user, password, email);
         return "redirect:/user/profile";
+    }
+
+    @GetMapping("subscribe/{user}")
+    public String subscribe(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user) {
+        userService.subscribe(currentUser, user);
+        return "redirect:/user-scenarios/" + user.getId();
+    }
+
+    @GetMapping("unsubscribe/{user}")
+    public String unsubscribe(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user) {
+        userService.unsubscribe(currentUser, user);
+        return "redirect:/user-scenarios/" + user.getId();
+    }
+
+    @GetMapping("{type}/{user}/list")
+    public String subscriptionList(
+            @PathVariable String type,
+            @PathVariable User user,
+            Model model) {
+        model.addAttribute("userChannel", user);
+        model.addAttribute("infoType", StringUtils.capitalize(type));
+        if ("subscriptions".equals(type)) {
+            model.addAttribute("users", user.getSubscriptions());
+        } else {
+            model.addAttribute("users", user.getSubscribers());
+        }
+        return "subscriptions";
     }
 }

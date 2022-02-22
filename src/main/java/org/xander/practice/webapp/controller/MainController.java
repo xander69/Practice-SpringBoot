@@ -93,17 +93,21 @@ public class MainController {
     }
 
     @GetMapping("/user-scenarios/{user}")
-    public String userScenarios(
+    public String userChannel(
             @AuthenticationPrincipal User currentUser,
             @PathVariable User user,
             @RequestParam(value = "scenario", required = false) Scenario scenario,
             Model model
     ) {
         Set<Scenario> scenarios = user.getScenarios();
+        model.addAttribute("userChannel", user);
+        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
+        model.addAttribute("subscribersCount", user.getSubscribers().size());
         model.addAttribute("scenarios", scenarios);
         model.addAttribute("scenario", scenario);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
-        return "userScenarios";
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        return "userChannel";
     }
 
     @PostMapping("/user-scenarios/{userId}")

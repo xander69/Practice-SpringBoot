@@ -18,7 +18,7 @@
                 <a class="nav-link" href="/user/profile">Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/user-scenarios/${authId}">My Scenarios</a>
+                <a class="nav-link" href="/user-scenarios/${authId}">My Channel</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/sysinfo">System Info</a>

@@ -78,7 +78,7 @@ public class UserService implements UserDetailsService {
             }
         }
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(inputData.get("password")));
         user.setActive(inputData.containsKey("active"));
         user.setEmail(inputData.get("email"));
         user.setChangeDateTime(new Date());
@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
             }
         }
         if (StringUtils.isNotBlank(password) && !Objects.equals(password, user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(password));
         }
         user.setChangeDateTime(new Date());
         userRepository.save(user);
@@ -130,5 +130,15 @@ public class UserService implements UserDetailsService {
                     user.getUsername(), baseUrl, user.getActivationCode());
             mailSender.send(user.getEmail(), "Activation code", message);
         }
+    }
+
+    public void subscribe(User currentUser, User user) {
+        user.getSubscribers().add(currentUser);
+        userRepository.save(user);
+    }
+
+    public void unsubscribe(User currentUser, User user) {
+        user.getSubscribers().remove(currentUser);
+        userRepository.save(user);
     }
 }
